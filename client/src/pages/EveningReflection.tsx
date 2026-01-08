@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ChevronRight, ChevronLeft, Mic, MicOff, Sparkles } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Mic, MicOff } from 'lucide-react';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useVoiceRecording } from '@/hooks/useVoiceRecording';

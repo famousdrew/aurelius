@@ -17,8 +17,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 // Middleware
 app.use('*', logger());
 app.use('*', cors({
-  origin: isProduction ? true : (process.env.CLIENT_URL || 'http://localhost:5173'),
-  credentials: true,
+  origin: isProduction ? '*' : (process.env.CLIENT_URL || 'http://localhost:5173'),
+  credentials: !isProduction,
 }));
 
 // Health check

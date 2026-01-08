@@ -17,7 +17,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: async (passphrase: string) => {
     try {
-      const response = await api.post('/auth/login', { passphrase });
+      const response = await api.post<{ success: boolean }>('/auth/login', { passphrase });
       if (response.success) {
         set({ isAuthenticated: true });
         return true;

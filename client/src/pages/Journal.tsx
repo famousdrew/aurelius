@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Calendar, Filter } from 'lucide-react';
+import { Search, Calendar } from 'lucide-react';
 import { api } from '@/lib/api';
-import { cn, formatDate, formatRelativeDate } from '@/lib/utils';
+import { cn, formatRelativeDate } from '@/lib/utils';
 
 interface Entry {
   id: string;
