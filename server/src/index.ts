@@ -37,10 +37,10 @@ app.route('/api/ai', aiRouter);
 
 // Serve static files in production
 if (isProduction) {
-  app.use('/*', serveStatic({ root: '../client/dist' }));
+  app.use('/*', serveStatic({ root: './client/dist' }));
 
   // SPA fallback - serve index.html for non-API routes
-  app.get('*', serveStatic({ path: '../client/dist/index.html' }));
+  app.get('*', serveStatic({ path: './client/dist/index.html' }));
 }
 
 const port = parseInt(process.env.PORT || '3000');
