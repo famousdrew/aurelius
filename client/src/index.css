@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 20% 96%;
+    --foreground: 210 29% 24%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 29% 24%;
+    --primary: 119 21% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 39 70% 66%;
+    --secondary-foreground: 210 29% 24%;
+    --muted: 40 20% 92%;
+    --muted-foreground: 210 10% 50%;
+    --accent: 119 21% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 119 21% 45%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 17% 14%;
+    --foreground: 0 0% 92%;
+    --card: 225 33% 16%;
+    --card-foreground: 0 0% 92%;
+    --primary: 119 21% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 39 70% 66%;
+    --secondary-foreground: 210 29% 24%;
+    --muted: 225 33% 20%;
+    --muted-foreground: 0 0% 72%;
+    --accent: 119 21% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --border: 225 20% 25%;
+    --input: 225 20% 25%;
+    --ring: 119 21% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for dark mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: hsl(225 33% 16%);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(225 20% 30%);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(225 20% 40%);
+}
