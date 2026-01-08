@@ -9,6 +9,7 @@ import { quotesRouter } from './routes/quotes.js';
 import { analyticsRouter } from './routes/analytics.js';
 import { aiRouter } from './routes/ai.js';
 import { authRouter } from './routes/auth.js';
+import { curriculumRouter } from './routes/curriculum.js';
 import { authMiddleware } from './middleware/auth.js';
 
 const app = new Hono();
@@ -34,6 +35,7 @@ app.route('/api/prompts', promptsRouter);
 app.route('/api/quotes', quotesRouter);
 app.route('/api/analytics', analyticsRouter);
 app.route('/api/ai', aiRouter);
+app.route('/api/curriculum', curriculumRouter);
 
 // Serve static files in production
 if (isProduction) {
