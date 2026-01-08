@@ -30,3 +30,7 @@ drizzle/meta/
 
 # PWA
 dev-dist/
+
+# TypeScript build info
+*.tsbuildinfo
+*.d.ts
