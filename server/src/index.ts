@@ -1,4 +1,5 @@
 import { serve } from '@hono/node-server';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
@@ -11,11 +12,12 @@ import { authRouter } from './routes/auth.js';
 import { authMiddleware } from './middleware/auth.js';
 
 const app = new Hono();
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Middleware
 app.use('*', logger());
 app.use('*', cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: isProduction ? true : (process.env.CLIENT_URL || 'http://localhost:5173'),
   credentials: true,
 }));
 
@@ -32,6 +34,14 @@ app.route('/api/prompts', promptsRouter);
 app.route('/api/quotes', quotesRouter);
 app.route('/api/analytics', analyticsRouter);
 app.route('/api/ai', aiRouter);
+
+// Serve static files in production
+if (isProduction) {
+  app.use('/*', serveStatic({ root: '../client/dist' }));
+
+  // SPA fallback - serve index.html for non-API routes
+  app.get('*', serveStatic({ path: '../client/dist/index.html' }));
+}
 
 const port = parseInt(process.env.PORT || '3000');
 
