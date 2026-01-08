@@ -13,13 +13,16 @@ async function initDatabase() {
   console.log('Initializing database schema...');
 
   try {
+    // Create tables one at a time
     await sql`
       CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
         passphrase TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS entries (
         id TEXT PRIMARY KEY,
         type TEXT NOT NULL,
@@ -30,8 +33,10 @@ async function initDatabase() {
         is_favorite BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at TIMESTAMP
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS prompts (
         id TEXT PRIMARY KEY,
         category TEXT NOT NULL,
@@ -39,8 +44,10 @@ async function initDatabase() {
         text TEXT NOT NULL,
         source TEXT,
         is_active BOOLEAN DEFAULT TRUE
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS quotes (
         id TEXT PRIMARY KEY,
         text TEXT NOT NULL,
@@ -50,8 +57,10 @@ async function initDatabase() {
         tags JSONB DEFAULT '[]',
         category TEXT,
         is_favorite BOOLEAN DEFAULT FALSE
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS streaks (
         id TEXT PRIMARY KEY,
         type TEXT NOT NULL,
@@ -59,22 +68,28 @@ async function initDatabase() {
         longest_count INTEGER DEFAULT 0,
         last_entry_date DATE,
         missed_dates JSONB DEFAULT '[]'
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS mood_factors (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         category TEXT,
         icon TEXT
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS entry_factors (
         entry_id TEXT NOT NULL REFERENCES entries(id) ON DELETE CASCADE,
         factor_id TEXT NOT NULL REFERENCES mood_factors(id),
         impact INTEGER,
         PRIMARY KEY (entry_id, factor_id)
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS ai_insights (
         id TEXT PRIMARY KEY,
         entry_id TEXT REFERENCES entries(id) ON DELETE CASCADE,
@@ -82,8 +97,10 @@ async function initDatabase() {
         content TEXT,
         model_used TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS badges (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -91,12 +108,14 @@ async function initDatabase() {
         icon TEXT,
         criteria JSONB,
         earned_at TIMESTAMP
-      );
+      )
+    `;
 
+    await sql`
       CREATE TABLE IF NOT EXISTS settings (
         key TEXT PRIMARY KEY,
         value JSONB
-      );
+      )
     `;
 
     console.log('Database schema initialized successfully');
