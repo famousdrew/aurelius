@@ -254,6 +254,3 @@ export function getCurriculumData() {
 
   return { phases, texts, passages };
 }
-
-// Export for direct use
-export const curriculumData = getCurriculumData();

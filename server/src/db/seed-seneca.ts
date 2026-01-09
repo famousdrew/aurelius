@@ -158,6 +158,3 @@ export function getSenecaData() {
 
   return { phase, text, passages, letterCount: letters.length };
 }
-
-// For testing
-export const senecaData = getSenecaData();
