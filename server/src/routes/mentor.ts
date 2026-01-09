@@ -1,14 +1,14 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 import Anthropic from '@anthropic-ai/sdk';
-import { db } from '../db/index.js';
 import {
+  db,
   entries,
   curriculumProgress,
   curriculumPassages,
   curriculumTexts,
   readingJournal,
-} from '../db/schema.js';
+} from '../db/index.js';
 import { desc, eq, gte, inArray } from 'drizzle-orm';
 
 export const mentorRouter = new Hono();
