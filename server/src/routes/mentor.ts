@@ -22,7 +22,7 @@ const conversations: Map<string, Array<{ role: 'user' | 'assistant'; content: st
 
 const chatSchema = z.object({
   message: z.string().min(1),
-  conversationId: z.string().optional(),
+  conversationId: z.string().nullish(), // allows undefined or null
 });
 
 // Get user's learning context
