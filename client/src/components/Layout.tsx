@@ -5,6 +5,7 @@ import {
   Moon,
   PenLine,
   BookOpen,
+  BookMarked,
   BarChart3,
   Quote,
   Settings,
@@ -17,6 +18,7 @@ import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
+  { name: 'Study', href: '/study', icon: BookMarked },
   { name: 'Morning', href: '/morning', icon: Sun },
   { name: 'Evening', href: '/evening', icon: Moon },
   { name: 'Write', href: '/write', icon: PenLine },
