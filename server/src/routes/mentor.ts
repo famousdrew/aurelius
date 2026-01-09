@@ -152,11 +152,19 @@ Remember: You're helping a real person live a better life through ancient wisdom
 
 // Chat with mentor
 mentorRouter.post('/chat', async (c) => {
-  const body = await c.req.json();
+  let body;
+  try {
+    body = await c.req.json();
+  } catch (e) {
+    console.error('Failed to parse request body:', e);
+    return c.json({ error: 'Invalid JSON body' }, 400);
+  }
+
   const result = chatSchema.safeParse(body);
 
   if (!result.success) {
-    return c.json({ error: 'Invalid request' }, 400);
+    console.error('Validation failed:', result.error.errors, 'Body:', body);
+    return c.json({ error: 'Invalid request', details: result.error.errors }, 400);
   }
 
   const { message, conversationId } = result.data;
