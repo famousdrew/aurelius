@@ -11,6 +11,7 @@ import { Journal } from '@/pages/Journal';
 import { Insights } from '@/pages/Insights';
 import { Quotes } from '@/pages/Quotes';
 import { Settings } from '@/pages/Settings';
+import { Mentor } from '@/pages/Mentor';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -58,6 +59,7 @@ export default function App() {
                 <Route path="/journal" element={<Journal />} />
                 <Route path="/insights" element={<Insights />} />
                 <Route path="/quotes" element={<Quotes />} />
+                <Route path="/mentor" element={<Mentor />} />
                 <Route path="/settings" element={<Settings />} />
               </Routes>
             </Layout>

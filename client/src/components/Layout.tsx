@@ -10,6 +10,7 @@ import {
   Settings,
   Menu,
   X,
+  GraduationCap,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -20,6 +21,7 @@ const navigation = [
   { name: 'Evening', href: '/evening', icon: Moon },
   { name: 'Write', href: '/write', icon: PenLine },
   { name: 'Journal', href: '/journal', icon: BookOpen },
+  { name: 'Mentor', href: '/mentor', icon: GraduationCap },
   { name: 'Insights', href: '/insights', icon: BarChart3 },
   { name: 'Quotes', href: '/quotes', icon: Quote },
   { name: 'Settings', href: '/settings', icon: Settings },
@@ -114,7 +116,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile bottom navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 flex h-16 items-center justify-around border-t border-border bg-card lg:hidden">
-        {navigation.slice(0, 5).map((item) => {
+        {navigation.slice(0, 6).map((item) => {
           const isActive = location.pathname === item.href;
           return (
             <Link
