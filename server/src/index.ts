@@ -26,8 +26,9 @@ app.use('*', cors({
 // Health check
 app.get('/health', (c) => c.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
-// Serve audio files
-app.use('/audio/*', serveStatic({ root: './public' }));
+// Serve audio files (path differs between dev and production)
+const audioRoot = isProduction ? './server/public' : './public';
+app.use('/audio/*', serveStatic({ root: audioRoot }));
 
 // Public routes
 app.route('/api/auth', authRouter);
