@@ -5,10 +5,13 @@ import {
   CheckCircle,
   ChevronRight,
   Loader2,
+  Pause,
   PenLine,
+  Play,
   Sparkles,
   Trophy,
 } from 'lucide-react';
+import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -72,6 +75,13 @@ export function Study() {
     queryKey: ['curriculum-today'],
     queryFn: () => api.get<TodayReading>('/curriculum/today'),
   });
+
+  // Audio player for passage readings
+  const passageId = todayData?.currentReading?.passage.id;
+  const textId = todayData?.currentReading?.text.id;
+  // Only enable audio for Enchiridion (text-001) for now
+  const audioUrl = passageId && textId === 'text-001' ? `/audio/${passageId}.mp3` : null;
+  const { isPlaying, isLoading: audioLoading, toggle: toggleAudio } = useAudioPlayer(audioUrl);
 
   const completeMutation = useMutation({
     mutationFn: (passageId: string) =>
@@ -168,9 +178,32 @@ export function Study() {
       <div className="rounded-xl border border-border bg-card">
         {/* Reading header */}
         <div className="border-b border-border p-4">
-          <div className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-primary" />
-            <h2 className="font-medium">{passage.reference}</h2>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" />
+              <h2 className="font-medium">{passage.reference}</h2>
+            </div>
+            {audioUrl && (
+              <button
+                onClick={toggleAudio}
+                disabled={audioLoading}
+                className={cn(
+                  'flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+                  isPlaying
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted hover:bg-muted/80'
+                )}
+              >
+                {audioLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : isPlaying ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+                {audioLoading ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}
+              </button>
+            )}
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
             {text?.title} by {text?.author} &middot; {passage.translation}
