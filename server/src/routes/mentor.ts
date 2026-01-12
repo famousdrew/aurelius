@@ -8,6 +8,7 @@ import {
   curriculumPassages,
   curriculumTexts,
   readingJournal,
+  mentorConversations,
 } from '../db/index.js';
 import { desc, eq, gte, inArray } from 'drizzle-orm';
 
@@ -16,9 +17,6 @@ export const mentorRouter = new Hono();
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
-
-// In-memory conversation storage (could move to DB for persistence)
-const conversations: Map<string, Array<{ role: 'user' | 'assistant'; content: string }>> = new Map();
 
 const chatSchema = z.object({
   message: z.string().min(1),
@@ -170,14 +168,21 @@ mentorRouter.post('/chat', async (c) => {
   const { message, conversationId } = result.data;
   const convId = conversationId || crypto.randomUUID();
 
-  // Get or create conversation
-  if (!conversations.has(convId)) {
-    conversations.set(convId, []);
+  // Get or create conversation from database
+  let existingConv = await db
+    .select()
+    .from(mentorConversations)
+    .where(eq(mentorConversations.id, convId))
+    .limit(1);
+
+  let history: Array<{ role: 'user' | 'assistant'; content: string; timestamp: string }> = [];
+
+  if (existingConv.length > 0) {
+    history = existingConv[0].messages || [];
   }
-  const history = conversations.get(convId)!;
 
   // Add user message
-  history.push({ role: 'user', content: message });
+  history.push({ role: 'user', content: message, timestamp: new Date().toISOString() });
 
   // Get user context for personalized responses
   const context = await getUserContext();
@@ -199,11 +204,25 @@ mentorRouter.post('/chat', async (c) => {
       : '';
 
     // Add assistant response to history
-    history.push({ role: 'assistant', content: assistantMessage });
+    history.push({ role: 'assistant', content: assistantMessage, timestamp: new Date().toISOString() });
 
     // Keep conversation history manageable (last 20 messages)
     if (history.length > 20) {
       history.splice(0, history.length - 20);
+    }
+
+    // Save to database
+    if (existingConv.length === 0) {
+      await db.insert(mentorConversations).values({
+        id: convId,
+        messages: history,
+        createdAt: new Date(),
+      });
+    } else {
+      await db
+        .update(mentorConversations)
+        .set({ messages: history, updatedAt: new Date() })
+        .where(eq(mentorConversations.id, convId));
     }
 
     return c.json({
@@ -219,14 +238,37 @@ mentorRouter.post('/chat', async (c) => {
 // Get conversation history
 mentorRouter.get('/conversation/:id', async (c) => {
   const { id } = c.req.param();
-  const history = conversations.get(id) || [];
-  return c.json({ messages: history });
+  const conv = await db
+    .select()
+    .from(mentorConversations)
+    .where(eq(mentorConversations.id, id))
+    .limit(1);
+
+  return c.json({ messages: conv[0]?.messages || [] });
+});
+
+// Get most recent conversation (for resuming)
+mentorRouter.get('/conversation', async (c) => {
+  const conv = await db
+    .select()
+    .from(mentorConversations)
+    .orderBy(desc(mentorConversations.updatedAt))
+    .limit(1);
+
+  if (conv.length === 0) {
+    return c.json({ conversationId: null, messages: [] });
+  }
+
+  return c.json({
+    conversationId: conv[0].id,
+    messages: conv[0].messages || [],
+  });
 });
 
 // Clear conversation
 mentorRouter.delete('/conversation/:id', async (c) => {
   const { id } = c.req.param();
-  conversations.delete(id);
+  await db.delete(mentorConversations).where(eq(mentorConversations.id, id));
   return c.json({ success: true });
 });
 

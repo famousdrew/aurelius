@@ -194,6 +194,14 @@ export const curriculumDiscussions = pgTable('curriculum_discussions', {
   updatedAt: timestamp('updated_at'),
 });
 
+// Mentor conversation history
+export const mentorConversations = pgTable('mentor_conversations', {
+  id: text('id').primaryKey(),
+  messages: jsonb('messages').$type<{ role: 'user' | 'assistant'; content: string; timestamp: string }[]>().default([]),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at'),
+});
+
 // Types for TypeScript
 export type Entry = typeof entries.$inferSelect;
 export type NewEntry = typeof entries.$inferInsert;

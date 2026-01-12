@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Send, Loader2, BookOpen, Trash2, Sparkles } from 'lucide-react';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -24,10 +24,17 @@ interface ChatResponse {
   conversationId: string;
 }
 
+interface ConversationHistory {
+  conversationId: string | null;
+  messages: Array<{ role: 'user' | 'assistant'; content: string; timestamp?: string }>;
+}
+
 export function Mentor() {
+  const queryClient = useQueryClient();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -35,6 +42,26 @@ export function Mentor() {
     queryKey: ['mentorContext'],
     queryFn: () => api.get<MentorContext>('/mentor/context'),
   });
+
+  // Load existing conversation on mount
+  const { data: existingConversation } = useQuery({
+    queryKey: ['mentorConversation'],
+    queryFn: () => api.get<ConversationHistory>('/mentor/conversation'),
+  });
+
+  // Set messages from existing conversation
+  useEffect(() => {
+    if (existingConversation && !historyLoaded) {
+      if (existingConversation.messages.length > 0) {
+        setMessages(existingConversation.messages.map(m => ({
+          role: m.role,
+          content: m.content,
+        })));
+        setConversationId(existingConversation.conversationId);
+      }
+      setHistoryLoaded(true);
+    }
+  }, [existingConversation, historyLoaded]);
 
   const chatMutation = useMutation({
     mutationFn: (message: string) =>
@@ -80,12 +107,14 @@ export function Mentor() {
     }
   };
 
-  const clearConversation = () => {
+  const clearConversation = async () => {
+    if (conversationId) {
+      await api.delete(`/mentor/conversation/${conversationId}`);
+    }
     setMessages([]);
     setConversationId(null);
-    if (conversationId) {
-      api.delete(`/mentor/conversation/${conversationId}`);
-    }
+    setHistoryLoaded(false);
+    queryClient.invalidateQueries({ queryKey: ['mentorConversation'] });
   };
 
   return (
