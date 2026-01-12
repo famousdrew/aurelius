@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   BookOpen,
   CheckCircle,
+  ChevronDown,
+  ChevronLeft,
   ChevronRight,
   Loader2,
   Pause,
@@ -22,6 +24,7 @@ interface Passage {
   translation: string;
   sessionNumber: number;
   passageNumber: number;
+  orderIndex?: number;
 }
 
 interface Text {
@@ -34,6 +37,13 @@ interface Phase {
   id: string;
   title: string;
   name: string;
+}
+
+interface PassageListItem {
+  id: string;
+  reference: string;
+  orderIndex: number;
+  completed: boolean;
 }
 
 interface TodayReading {
@@ -54,6 +64,18 @@ interface TodayReading {
   message?: string;
 }
 
+interface PassageDetail {
+  passage: Passage;
+  text: Text;
+  phase: Phase;
+  studyGuide: {
+    reflectionQuestions?: string[];
+    stoicConcepts?: string[];
+    practicalExercises?: string[];
+  } | null;
+  progress: { status: string } | null;
+}
+
 interface JournalEntry {
   reflection: string;
   personalConnection: string;
@@ -63,6 +85,8 @@ interface JournalEntry {
 
 export function Study() {
   const queryClient = useQueryClient();
+  const [selectedPassageId, setSelectedPassageId] = useState<string | null>(null);
+  const [showChapterList, setShowChapterList] = useState(false);
   const [showJournal, setShowJournal] = useState(false);
   const [journal, setJournal] = useState<JournalEntry>({
     reflection: '',
@@ -71,23 +95,82 @@ export function Study() {
     practiceCommitment: '',
   });
 
-  const { data: todayData, isLoading } = useQuery({
+  // Get today's reading (for default and progress info)
+  const { data: todayData, isLoading: todayLoading } = useQuery({
     queryKey: ['curriculum-today'],
     queryFn: () => api.get<TodayReading>('/curriculum/today'),
   });
 
-  // Audio player for passage readings
-  const passageId = todayData?.currentReading?.passage.id;
-  const textId = todayData?.currentReading?.text.id;
-  // Only enable audio for Enchiridion (text-001) for now
+  // Set default passage to today's reading
+  useEffect(() => {
+    if (todayData?.currentReading?.passage.id && !selectedPassageId) {
+      setSelectedPassageId(todayData.currentReading.passage.id);
+    }
+  }, [todayData, selectedPassageId]);
+
+  // Get the current text ID for fetching passage list
+  const currentTextId = todayData?.currentReading?.text.id || 'text-001';
+
+  // Fetch list of all passages for navigation
+  const { data: passageList } = useQuery({
+    queryKey: ['passage-list', currentTextId],
+    queryFn: () => api.get<PassageListItem[]>(`/curriculum/texts/${currentTextId}/passages`),
+    enabled: !!currentTextId,
+  });
+
+  // Fetch selected passage details (if different from today's)
+  const { data: selectedPassageData, isLoading: passageLoading } = useQuery({
+    queryKey: ['passage', selectedPassageId],
+    queryFn: () => api.get<PassageDetail>(`/curriculum/passages/${selectedPassageId}`),
+    enabled: !!selectedPassageId && selectedPassageId !== todayData?.currentReading?.passage.id,
+  });
+
+  // Determine which passage data to use
+  const isViewingToday = selectedPassageId === todayData?.currentReading?.passage.id;
+  const currentData = isViewingToday ? todayData?.currentReading : selectedPassageData;
+  const isLoading = todayLoading || (!isViewingToday && passageLoading);
+
+  // Audio player
+  const passageId = currentData?.passage.id;
+  const textId = currentData?.text?.id;
   const audioUrl = passageId && textId === 'text-001' ? `/audio/${passageId}.mp3` : null;
   const { isPlaying, isLoading: audioLoading, toggle: toggleAudio } = useAudioPlayer(audioUrl);
+
+  // Find current index for prev/next navigation
+  const currentIndex = passageList?.findIndex(p => p.id === selectedPassageId) ?? -1;
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex >= 0 && currentIndex < (passageList?.length ?? 0) - 1;
+
+  const goToPrev = () => {
+    if (hasPrev && passageList) {
+      setSelectedPassageId(passageList[currentIndex - 1].id);
+      setShowJournal(false);
+      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
+    }
+  };
+
+  const goToNext = () => {
+    if (hasNext && passageList) {
+      setSelectedPassageId(passageList[currentIndex + 1].id);
+      setShowJournal(false);
+      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
+    }
+  };
+
+  const goToToday = () => {
+    if (todayData?.currentReading?.passage.id) {
+      setSelectedPassageId(todayData.currentReading.passage.id);
+      setShowJournal(false);
+      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
+    }
+  };
 
   const completeMutation = useMutation({
     mutationFn: (passageId: string) =>
       api.post(`/curriculum/progress/${passageId}`, { status: 'completed' }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['curriculum-today'] });
+      queryClient.invalidateQueries({ queryKey: ['passage-list'] });
       queryClient.invalidateQueries({ queryKey: ['mentorContext'] });
     },
   });
@@ -101,18 +184,17 @@ export function Study() {
   });
 
   const handleComplete = () => {
-    if (!todayData?.currentReading?.passage.id) return;
+    if (!currentData?.passage.id) return;
 
-    // Save journal if there's content
     const hasJournalContent = Object.values(journal).some(v => v.trim());
     if (hasJournalContent) {
       saveJournalMutation.mutate({
-        passageId: todayData.currentReading.passage.id,
+        passageId: currentData.passage.id,
         ...journal,
       });
     }
 
-    completeMutation.mutate(todayData.currentReading.passage.id);
+    completeMutation.mutate(currentData.passage.id);
   };
 
   if (isLoading) {
@@ -123,8 +205,8 @@ export function Study() {
     );
   }
 
-  // All readings completed
-  if (!todayData?.currentReading) {
+  // All readings completed and no specific passage selected
+  if (!currentData) {
     return (
       <div className="space-y-8">
         <div className="text-center">
@@ -138,8 +220,9 @@ export function Study() {
     );
   }
 
-  const { passage, text, phase, studyGuide } = todayData.currentReading;
-  const progress = Math.round((todayData.totalCompleted / todayData.totalPassages) * 100);
+  const { passage, text, phase, studyGuide, progress } = currentData;
+  const overallProgress = Math.round(((todayData?.totalCompleted ?? 0) / (todayData?.totalPassages ?? 1)) * 100);
+  const isCompleted = progress?.status === 'completed';
 
   return (
     <div className="space-y-6">
@@ -147,12 +230,14 @@ export function Study() {
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-muted-foreground">
-            Day {todayData.dayNumber} of {todayData.totalPassages}
+            Chapter {currentIndex + 1} of {passageList?.length ?? todayData?.totalPassages}
           </p>
-          <h1 className="text-2xl font-semibold">Today's Reading</h1>
+          <h1 className="text-2xl font-semibold">
+            {isViewingToday ? "Today's Reading" : passage.reference}
+          </h1>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-semibold text-primary">{progress}%</p>
+          <p className="text-2xl font-semibold text-primary">{overallProgress}%</p>
           <p className="text-sm text-muted-foreground">complete</p>
         </div>
       </div>
@@ -161,9 +246,80 @@ export function Study() {
       <div className="h-2 overflow-hidden rounded-full bg-muted">
         <div
           className="h-full bg-primary transition-all"
-          style={{ width: `${progress}%` }}
+          style={{ width: `${overallProgress}%` }}
         />
       </div>
+
+      {/* Navigation controls */}
+      <div className="flex items-center justify-between gap-2">
+        <button
+          onClick={goToPrev}
+          disabled={!hasPrev}
+          className={cn(
+            'flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+            hasPrev ? 'bg-muted hover:bg-muted/80' : 'opacity-40 cursor-not-allowed'
+          )}
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Prev
+        </button>
+
+        {/* Chapter selector */}
+        <div className="relative flex-1 max-w-xs">
+          <button
+            onClick={() => setShowChapterList(!showChapterList)}
+            className="flex w-full items-center justify-between gap-2 rounded-lg bg-muted px-3 py-2 text-sm font-medium hover:bg-muted/80"
+          >
+            <span className="truncate">{passage.reference}</span>
+            <ChevronDown className={cn('h-4 w-4 transition-transform', showChapterList && 'rotate-180')} />
+          </button>
+
+          {showChapterList && (
+            <div className="absolute top-full left-0 right-0 z-10 mt-1 max-h-64 overflow-y-auto rounded-lg border border-border bg-card shadow-lg">
+              {passageList?.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    setSelectedPassageId(p.id);
+                    setShowChapterList(false);
+                    setShowJournal(false);
+                    setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
+                  }}
+                  className={cn(
+                    'flex w-full items-center justify-between px-3 py-2 text-sm hover:bg-muted',
+                    p.id === selectedPassageId && 'bg-primary/10 text-primary'
+                  )}
+                >
+                  <span>{p.reference}</span>
+                  {p.completed && <CheckCircle className="h-4 w-4 text-green-500" />}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <button
+          onClick={goToNext}
+          disabled={!hasNext}
+          className={cn(
+            'flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+            hasNext ? 'bg-muted hover:bg-muted/80' : 'opacity-40 cursor-not-allowed'
+          )}
+        >
+          Next
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* "Go to today" button if not viewing today's reading */}
+      {!isViewingToday && todayData?.currentReading && (
+        <button
+          onClick={goToToday}
+          className="w-full rounded-lg border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+        >
+          ← Back to Today's Reading
+        </button>
+      )}
 
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -172,6 +328,9 @@ export function Study() {
         <span>{text?.title}</span>
         <ChevronRight className="h-4 w-4" />
         <span className="text-foreground">{passage.reference}</span>
+        {isCompleted && (
+          <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
+        )}
       </div>
 
       {/* Main reading card */}
@@ -331,22 +490,32 @@ export function Study() {
         )}
       </div>
 
-      {/* Complete button */}
-      <button
-        onClick={handleComplete}
-        disabled={completeMutation.isPending}
-        className={cn(
-          'flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-4 font-medium text-primary-foreground',
-          'transition-colors hover:bg-primary/90 disabled:opacity-50'
-        )}
-      >
-        {completeMutation.isPending ? (
-          <Loader2 className="h-5 w-5 animate-spin" />
-        ) : (
+      {/* Complete button - only show if not already completed */}
+      {!isCompleted && (
+        <button
+          onClick={handleComplete}
+          disabled={completeMutation.isPending}
+          className={cn(
+            'flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-4 font-medium text-primary-foreground',
+            'transition-colors hover:bg-primary/90 disabled:opacity-50'
+          )}
+        >
+          {completeMutation.isPending ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <CheckCircle className="h-5 w-5" />
+          )}
+          {completeMutation.isPending ? 'Saving...' : 'Complete Reading'}
+        </button>
+      )}
+
+      {/* Already completed indicator */}
+      {isCompleted && (
+        <div className="flex items-center justify-center gap-2 rounded-xl bg-green-500/10 py-4 text-green-600 dark:text-green-400">
           <CheckCircle className="h-5 w-5" />
-        )}
-        {completeMutation.isPending ? 'Saving...' : 'Complete Reading'}
-      </button>
+          <span className="font-medium">Completed</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,0 +1,501 @@
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+node:internal/process/promises:391
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+}
+
+Node.js v20.18.1
+Initializing database schema...
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+node:internal/process/promises:391
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  routine: 'exec_parse_message'
+}
+
+Node.js v20.18.1
+Initializing database schema...
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+node:internal/process/promises:391
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+}
+
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+    at Readable.push (node:internal/streams/readable:392:5)
+  severity_local: 'ERROR',
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+Node.js v20.18.1
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+Initializing database schema...
+  code: '42601',
+    at Socket.emit (node:events:518:28)
+  file: 'postgres.c',
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+  code: '42601',
+PostgresError: cannot insert multiple commands into a prepared statement
+node:internal/process/promises:391
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+  file: 'postgres.c',
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+  severity: 'ERROR',
+    triggerUncaughtException(err, true /* fromPromise */);
+  line: '1478',
+    ^
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+
+  routine: 'exec_parse_message'
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+node:internal/process/promises:391
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+
+Node.js v20.18.1
+Initializing database schema...
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+
+Node.js v20.18.1
+Initializing database schema...
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+}
+node:internal/process/promises:391
+  code: '42601',
+    triggerUncaughtException(err, true /* fromPromise */);
+  severity_local: 'ERROR',
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  file: 'postgres.c',
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+  severity: 'ERROR',
+  line: '1478',
+    ^
+    at Socket.emit (node:events:518:28)
+  routine: 'exec_parse_message'
+    at addChunk (node:internal/streams/readable:561:12)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+
+    at Readable.push (node:internal/streams/readable:392:5)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+PostgresError: cannot insert multiple commands into a prepared statement
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+
+Node.js v20.18.1
+Initializing database schema...
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+node:internal/process/promises:391
+  code: '42601',
+    triggerUncaughtException(err, true /* fromPromise */);
+  file: 'postgres.c',
+    ^
+  line: '1478',
+
+  routine: 'exec_parse_message'
+}
+PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+
+Node.js v20.18.1
+Initializing database schema...
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+node:internal/process/promises:391
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+
+Node.js v20.18.1
+Initializing database schema...
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+node:internal/process/promises:391
+    at Socket.emit (node:events:518:28)
+  severity: 'ERROR',
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+  code: '42601',
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at addChunk (node:internal/streams/readable:561:12)
+  file: 'postgres.c',
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+  line: '1478',
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+  routine: 'exec_parse_message'
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+}
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+  routine: 'exec_parse_message'
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+  code: '42601',
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+
+    at Socket.emit (node:events:518:28)
+  severity_local: 'ERROR',
+  file: 'postgres.c',
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+PostgresError: cannot insert multiple commands into a prepared statement
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+  severity: 'ERROR',
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+  line: '1478',
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+}
+
+Node.js v20.18.1
+Initializing database schema...
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+node:internal/process/promises:391
+  line: '1478',
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+    ^
+  severity_local: 'ERROR',
+
+  routine: 'exec_parse_message'
+  severity: 'ERROR',
+PostgresError: cannot insert multiple commands into a prepared statement
+  code: '42601',
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+  file: 'postgres.c',
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    triggerUncaughtException(err, true /* fromPromise */);
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+  file: 'postgres.c',
+  line: '1478',
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+  routine: 'exec_parse_message'
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+  severity: 'ERROR',
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+}
+  code: '42601',
+
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+Node.js v20.18.1
+Initializing database schema...
+Database initialization failed: PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+}
+node:internal/process/promises:391
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+PostgresError: cannot insert multiple commands into a prepared statement
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:815:30)
+    at handle (file:///app/node_modules/postgres/src/connection.js:489:6)
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:324:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23)
+    at cachedError (file:///app/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///app/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///app/node_modules/postgres/src/index.js:112:11)
+    at initDatabase (file:///app/server/dist/db/init.js:11:19) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42601',
+  file: 'postgres.c',
+  line: '1478',
+  routine: 'exec_parse_message'
+}
+
+Node.js v20.18.1

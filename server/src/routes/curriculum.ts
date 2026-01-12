@@ -312,6 +312,36 @@ curriculumRouter.get('/phases', async (c) => {
   return c.json(phasesWithTexts);
 });
 
+// List all passages for a text (for navigation)
+curriculumRouter.get('/texts/:textId/passages', async (c) => {
+  const { textId } = c.req.param();
+
+  const passages = await db
+    .select({
+      id: curriculumPassages.id,
+      reference: curriculumPassages.reference,
+      orderIndex: curriculumPassages.orderIndex,
+    })
+    .from(curriculumPassages)
+    .where(eq(curriculumPassages.textId, textId))
+    .orderBy(asc(curriculumPassages.orderIndex));
+
+  // Get progress for each passage
+  const progress = await db
+    .select()
+    .from(curriculumProgress)
+    .where(eq(curriculumProgress.status, 'completed'));
+
+  const completedIds = new Set(progress.map(p => p.passageId));
+
+  const passagesWithProgress = passages.map(p => ({
+    ...p,
+    completed: completedIds.has(p.id),
+  }));
+
+  return c.json(passagesWithProgress);
+});
+
 // Get single passage with study guide
 curriculumRouter.get('/passages/:id', async (c) => {
   const { id } = c.req.param();
