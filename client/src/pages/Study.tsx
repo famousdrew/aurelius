@@ -125,6 +125,27 @@ export function Study() {
     enabled: !!selectedPassageId && selectedPassageId !== todayData?.currentReading?.passage.id,
   });
 
+  // Fetch existing journal entry for current passage
+  const { data: existingJournal } = useQuery({
+    queryKey: ['journal', selectedPassageId],
+    queryFn: () => api.get<JournalEntry>(`/curriculum/journal/${selectedPassageId}`).catch(() => null),
+    enabled: !!selectedPassageId,
+  });
+
+  // Load existing journal entry into form when passage changes
+  useEffect(() => {
+    if (existingJournal) {
+      setJournal({
+        reflection: existingJournal.reflection || '',
+        personalConnection: existingJournal.personalConnection || '',
+        favoriteQuote: existingJournal.favoriteQuote || '',
+        practiceCommitment: existingJournal.practiceCommitment || '',
+      });
+    } else {
+      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
+    }
+  }, [existingJournal, selectedPassageId]);
+
   // Determine which passage data to use
   const isViewingToday = selectedPassageId === todayData?.currentReading?.passage.id;
   const currentData = isViewingToday ? todayData?.currentReading : selectedPassageData;
@@ -145,7 +166,6 @@ export function Study() {
     if (hasPrev && passageList) {
       setSelectedPassageId(passageList[currentIndex - 1].id);
       setShowJournal(false);
-      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
     }
   };
 
@@ -153,7 +173,6 @@ export function Study() {
     if (hasNext && passageList) {
       setSelectedPassageId(passageList[currentIndex + 1].id);
       setShowJournal(false);
-      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
     }
   };
 
@@ -161,7 +180,6 @@ export function Study() {
     if (todayData?.currentReading?.passage.id) {
       setSelectedPassageId(todayData.currentReading.passage.id);
       setShowJournal(false);
-      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
     }
   };
 
@@ -179,6 +197,7 @@ export function Study() {
     mutationFn: (data: { passageId: string } & JournalEntry) =>
       api.post('/curriculum/journal', data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['journal'] });
       setShowJournal(false);
     },
   });
@@ -283,7 +302,6 @@ export function Study() {
                     setSelectedPassageId(p.id);
                     setShowChapterList(false);
                     setShowJournal(false);
-                    setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
                   }}
                   className={cn(
                     'flex w-full items-center justify-between px-3 py-2 text-sm hover:bg-muted',
