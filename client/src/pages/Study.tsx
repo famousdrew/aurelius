@@ -94,6 +94,7 @@ export function Study() {
     favoriteQuote: '',
     practiceCommitment: '',
   });
+  const [journalLoadedForPassage, setJournalLoadedForPassage] = useState<string | null>(null);
 
   // Get today's reading (for default and progress info)
   const { data: todayData, isLoading: todayLoading } = useQuery({
@@ -132,19 +133,26 @@ export function Study() {
     enabled: !!selectedPassageId,
   });
 
-  // Load existing journal entry into form when passage changes
+  // Clear journal form when navigating to a different passage
   useEffect(() => {
-    if (existingJournal) {
+    if (selectedPassageId && selectedPassageId !== journalLoadedForPassage) {
+      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
+      setJournalLoadedForPassage(null);
+    }
+  }, [selectedPassageId, journalLoadedForPassage]);
+
+  // Load existing journal entry only once per passage (after query completes)
+  useEffect(() => {
+    if (existingJournal && selectedPassageId && journalLoadedForPassage !== selectedPassageId) {
       setJournal({
         reflection: existingJournal.reflection || '',
         personalConnection: existingJournal.personalConnection || '',
         favoriteQuote: existingJournal.favoriteQuote || '',
         practiceCommitment: existingJournal.practiceCommitment || '',
       });
-    } else {
-      setJournal({ reflection: '', personalConnection: '', favoriteQuote: '', practiceCommitment: '' });
+      setJournalLoadedForPassage(selectedPassageId);
     }
-  }, [existingJournal, selectedPassageId]);
+  }, [existingJournal, selectedPassageId, journalLoadedForPassage]);
 
   // Determine which passage data to use
   const isViewingToday = selectedPassageId === todayData?.currentReading?.passage.id;
@@ -196,8 +204,11 @@ export function Study() {
   const saveJournalMutation = useMutation({
     mutationFn: (data: { passageId: string } & JournalEntry) =>
       api.post('/curriculum/journal', data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['journal'] });
+    onSuccess: (_data, variables) => {
+      // Invalidate only the specific passage's journal query
+      queryClient.invalidateQueries({ queryKey: ['journal', variables.passageId] });
+      // Mark as loaded so we don't overwrite the form with refetched data
+      setJournalLoadedForPassage(variables.passageId);
       setShowJournal(false);
     },
   });
