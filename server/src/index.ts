@@ -47,8 +47,30 @@ app.route('/api/ai', aiRouter);
 app.route('/api/curriculum', curriculumRouter);
 app.route('/api/mentor', mentorRouter);
 
-// Serve static files in production
+// Serve static files in production with proper cache headers
 if (isProduction) {
+  // Cache-control middleware for static assets
+  app.use('/*', async (c, next) => {
+    await next();
+
+    const path = c.req.path;
+
+    // Hashed assets (JS/CSS with hash) - cache for 1 year
+    if (/\.[a-f0-9]{8}\.(js|css)$/.test(path) || /assets\//.test(path)) {
+      c.header('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+    // HTML files - always revalidate
+    else if (path.endsWith('.html') || path === '/' || !path.includes('.')) {
+      c.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+      c.header('Pragma', 'no-cache');
+      c.header('Expires', '0');
+    }
+    // Other static assets (images, fonts) - cache for 1 day
+    else if (/\.(png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$/.test(path)) {
+      c.header('Cache-Control', 'public, max-age=86400');
+    }
+  });
+
   app.use('/*', serveStatic({ root: './client/dist' }));
 
   // SPA fallback - serve index.html for non-API routes

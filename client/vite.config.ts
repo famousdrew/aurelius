@@ -39,17 +39,25 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // Don't precache index.html - always fetch fresh from network
+        globPatterns: ['**/*.{js,css,ico,png,svg,woff2}'],
+        // Take control immediately when new SW is available
+        skipWaiting: true,
+        clientsClaim: true,
+        // Use network-first for navigation (HTML) requests
+        navigateFallback: null,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\./i,
+            // Cache API responses with network-first strategy
+            urlPattern: /\/api\//i,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24, // 24 hours
+                maxAgeSeconds: 60 * 60, // 1 hour
               },
+              networkTimeoutSeconds: 10,
             },
           },
         ],
