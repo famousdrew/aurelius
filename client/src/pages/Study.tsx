@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   BookOpen,
+  Check,
   CheckCircle,
   ChevronDown,
   ChevronLeft,
@@ -10,6 +11,7 @@ import {
   Pause,
   PenLine,
   Play,
+  Save,
   Sparkles,
   Trophy,
 } from 'lucide-react';
@@ -95,6 +97,7 @@ export function Study() {
     practiceCommitment: '',
   });
   const [journalLoadedForPassage, setJournalLoadedForPassage] = useState<string | null>(null);
+  const [showSaveSuccess, setShowSaveSuccess] = useState(false);
 
   // Get today's reading (for default and progress info)
   const { data: todayData, isLoading: todayLoading } = useQuery({
@@ -202,16 +205,33 @@ export function Study() {
   });
 
   const saveJournalMutation = useMutation({
-    mutationFn: (data: { passageId: string } & JournalEntry) =>
+    mutationFn: (data: { passageId: string; closeAfterSave?: boolean } & JournalEntry) =>
       api.post('/curriculum/journal', data),
     onSuccess: (_data, variables) => {
       // Invalidate only the specific passage's journal query
       queryClient.invalidateQueries({ queryKey: ['journal', variables.passageId] });
       // Mark as loaded so we don't overwrite the form with refetched data
       setJournalLoadedForPassage(variables.passageId);
-      setShowJournal(false);
+      // Show success feedback
+      setShowSaveSuccess(true);
+      setTimeout(() => setShowSaveSuccess(false), 2000);
+      // Only close if completing the reading
+      if (variables.closeAfterSave) {
+        setShowJournal(false);
+      }
     },
   });
+
+  const handleSaveNotes = () => {
+    if (!currentData?.passage.id) return;
+    const hasContent = Object.values(journal).some(v => v.trim());
+    if (!hasContent) return;
+
+    saveJournalMutation.mutate({
+      passageId: currentData.passage.id,
+      ...journal,
+    });
+  };
 
   const handleComplete = () => {
     if (!currentData?.passage.id) return;
@@ -220,8 +240,11 @@ export function Study() {
     if (hasJournalContent) {
       saveJournalMutation.mutate({
         passageId: currentData.passage.id,
+        closeAfterSave: true,
         ...journal,
       });
+    } else {
+      setShowJournal(false);
     }
 
     completeMutation.mutate(currentData.passage.id);
@@ -515,6 +538,27 @@ export function Study() {
                 className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
+
+            {/* Save Notes button */}
+            <button
+              onClick={handleSaveNotes}
+              disabled={saveJournalMutation.isPending || !Object.values(journal).some(v => v.trim())}
+              className={cn(
+                'flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium transition-all',
+                showSaveSuccess
+                  ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                  : 'bg-muted hover:bg-muted/80 disabled:opacity-50 disabled:cursor-not-allowed'
+              )}
+            >
+              {saveJournalMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : showSaveSuccess ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              {saveJournalMutation.isPending ? 'Saving...' : showSaveSuccess ? 'Saved' : 'Save Notes'}
+            </button>
           </div>
         )}
       </div>
